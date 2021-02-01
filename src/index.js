@@ -14,7 +14,7 @@ const publicDir = path.join(__dirname, '../public')
 const { genearteMsg, generateLocationMsg } = require('../public/utils/generatemsg')
 const { adduser, removeUser, getUser, getUserRoom, users} = require('../public/utils/users')
 app.use(express.static(publicDir))
-app.get('/', (req, res)=>{
+app.get('', (req, res)=>{
     res.render('index')
 })
 
