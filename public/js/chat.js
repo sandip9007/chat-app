@@ -95,16 +95,24 @@ socket.on('showlocation', (locationData)=>{
 //Send message
 sendMsg.addEventListener('click', (e)=>{
     e.preventDefault()
-    sendMsg.setAttribute('disabled', 'disabled')
+    // sendMsg.setAttribute('disabled', 'disabled')
     const msgTxt = document.querySelector('#msgText').value
-    socket.emit('messagetext', { msgTxt, username }, (error)=>{
-        if(error){
-            return console.log(error)
-        }
-        console.log("Message was delivered!")
-    })
-    sendMsg.removeAttribute('disabled') 
-    document.querySelector('#msgText').value = ''
+    // console.log(msgText)
+    if(msgText.value === ""){
+        alert("Please say something")
+    }
+  
+    else{
+        socket.emit('messagetext', { msgTxt, username }, (error)=>{
+            if(error){
+                return console.log(error)
+            }
+            console.log("Message was delivered!")
+        })
+        sendMsg.removeAttribute('disabled') 
+        document.querySelector('#msgText').value = ''
+    }
+    
 })
 
 
