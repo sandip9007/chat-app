@@ -66,7 +66,7 @@ io.on('connection', (socket)=>{
     socket.on('disconnect', ()=>{
         const user = getUser(socket.id)
         if(user){
-            io.emit('disconnectMessage', genearteMsg(`${user.username} has left`));  
+            io.to(user.room).emit('disconnectMessage', genearteMsg(`${user.username} has left`));  
             removeUser(socket.id)
         }
         
