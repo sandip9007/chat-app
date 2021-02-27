@@ -33,13 +33,11 @@ io.on('connection', (socket)=>{
         }
         
         const user = getUser(socket.id)
-        // console.log(user.room)
         io.to(user.room).emit('message', genearteMsg(msgTxt, username))
     })
 
     //Join Room
     socket.on('join', ({ username, roomname }, callback)=>{
-        // const roomName = roomname.toLowerCase()
         const { error, user } = adduser({ id : socket.id , username : username, room : roomname })
          if(error){
             return callback(error)
@@ -51,7 +49,7 @@ io.on('connection', (socket)=>{
             room : user.room,
             users : getUserRoom(user.room)
         })
-        // console.log(user.room)
+
         callback()
     })
 
@@ -60,17 +58,17 @@ io.on('connection', (socket)=>{
         
         const url = 'https://www.google.com/maps?q='+latitude+','+longitude
         const user = getUser(socket.id)
-        // console.log(user.room)
         io.to(user.room).emit('showlocation', generateLocationMsg(url, username))
         callback('Location is recieved')
     })
 
     //Disconnect message
     socket.on('disconnect', ()=>{
-    
         const user = getUser(socket.id)
-        // console.log(user)
-        io.emit('disconnectMessage', `${user} has left`);  
+        if(user){
+            io.emit('disconnectMessage', genearteMsg(`${user.username} has left`));  
+            removeUser(socket.id)
+        }
         
     })
 })  

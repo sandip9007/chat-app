@@ -4,7 +4,9 @@ const sendMsg = document.querySelector('#sendMsg')
 const sendLoc = document.querySelector('#sendLoc')
 const messages = document.querySelector('#messages')
 const sidebar = document.querySelector('#sidebar')
-
+const showAlert = document.querySelector('#showAlert')
+const disableBackground = document.querySelector('#disableBackground')
+// #disableBackground
 //Templates
 const messageTemplate = document.querySelector('#message-template').innerHTML
 const locationTemplate = document.querySelector('#location-template').innerHTML
@@ -41,7 +43,6 @@ const autoScroll = ()=>{
 
 //Welcome Message
 socket.on('welcomemessage', (data)=>{
-    console.log(data)
     const html = Mustache.render(messageTemplate, { 
         message : data.text,
         time : moment(data.time).format('h:mm A')
@@ -52,7 +53,6 @@ socket.on('welcomemessage', (data)=>{
 
 //Message 
 socket.on('message', (message)=>{
-    // console.log(message)
     const html = Mustache.render(messageTemplate, { 
         message : message.text,
         Username: message.username,
@@ -62,7 +62,6 @@ socket.on('message', (message)=>{
     autoScroll()
 })
 socket.on('roomdata',({ room, users})=>{
-    // console.log(users)
     const html = Mustache.render(sidebarTemplate, { 
         room,
         users
@@ -78,28 +77,28 @@ socket.on('disconnectMessage',(data)=>{
     })
     messages.insertAdjacentHTML('beforeend',html)
     autoScroll()
+    console.log(data)
 })
 
 //Recieve Location
 socket.on('showlocation', (locationData)=>{
-    console.log(locationData)
     const html = Mustache.render(locationTemplate, {
         Username : locationData.username, 
         url : locationData.url,
         time : moment(locationData.time).format('h:mm A')
     })
     messages.insertAdjacentHTML('beforeend',html)
-
-    // console.log(locationData)
 })
 //Send message
 sendMsg.addEventListener('click', (e)=>{
     e.preventDefault()
-    // sendMsg.setAttribute('disabled', 'disabled')
+    sendMsg.setAttribute('disabled', 'disabled')
     const msgTxt = document.querySelector('#msgText').value
     // console.log(msgText)
     if(msgText.value === ""){
-        alert("Please say something")
+        // alert("Please say something")
+        showAlertBox("Please type a message", 2000)
+        sendMsg.removeAttribute('disabled')
     }
   
     else{
@@ -129,7 +128,6 @@ sendLoc.addEventListener('click', ()=>{
             username
         }, ()=>{
             sendLoc.removeAttribute('disabled')
-            console.log('Location was sent')
             
         })
     })
@@ -137,5 +135,22 @@ sendLoc.addEventListener('click', ()=>{
 
 
 socket.emit('join', { username, roomname }, (error)=>{
-
+    if(error){
+        // throw new Error (error)
+        showAlertBox(error, 1000)
+        disableBackground.style.display = "block"
+        setTimeout(()=>{
+            window.location.href = "index.html";
+        },1000)
+        
+    }
 })
+
+function showAlertBox(text, time){
+    showAlert.style.display = "flex"
+    showAlert.textContent = text
+    setTimeout(()=>{
+        showAlert.style.display = "none" 
+    },time)
+
+}

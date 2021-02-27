@@ -34,20 +34,18 @@ const removeUser = (id)=>{
     })
 
     if(index !== -1 ){
-        return users.splice(index, 1)
+        return users.splice(index, 1)[0]
     }
 }
 //Get users
 const getUser = (id)=>{
-    const findUser = users.find((user)=>{
-        return user.id === id
-    })
-    if(!getUser){
-        return {
-            error : undefined
-        }
-    }
-    return findUser
+    return users.find((user)=> user.id === id )
+    // if(!getUser){
+    //     return {
+    //         error : undefined
+    //     }
+    // }
+    // return findUser
 }
 
 //Get room name
@@ -58,8 +56,19 @@ const getUserRoom = (room)=>{
 
     return findRoom
 }  
+// adduser({id : 5, username : "Sandip", room : "Infy"})
+// // adduser({id : 5, username : "Sandip", room : "Infy"})
 
+// const {error, user } = adduser(
+//     {id : 5, username : "Sandip", room : "Infy"}
+// )
 
+// if(error){
+//    return console.log(error)
+// }
+// else{
+//     console.log(user)
+// }
 module.exports = {
     adduser,
     removeUser,
